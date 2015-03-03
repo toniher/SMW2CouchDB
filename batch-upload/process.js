@@ -1,5 +1,5 @@
-// var mw = require('nodemw');
-// var couchdb = require('couchdb');
+var mw = require('nodemw');
+var cradle = require('cradle');
 
 exports.getSMWBlastDBcmd = function( config, cb ) {
 

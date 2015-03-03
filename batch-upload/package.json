@@ -11,6 +11,7 @@
     "api"
   ],
   "dependencies": {
+    "cradle": "^0.6.9",
     "nconf": "0.6.x",
     "nodemw": "^0.4.0"
   },
