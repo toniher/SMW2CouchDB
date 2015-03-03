@@ -1,0 +1,19 @@
+{
+  "name": "batch-upload",
+  "version": "0.0.1",
+  "description": "Script for uploading from Semantic MediaWiki to CouchDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "smw",
+    "api"
+  ],
+  "dependencies": {
+    "nconf": "0.6.x",
+    "nodemw": "^0.4.0"
+  },
+  "author": "Toni Hermoso",
+  "license": "GPLv3"
+}
