@@ -1,0 +1,30 @@
+{
+	"mw": {
+		"username": "",
+		"password": "",
+		"host": "",
+		"smwquery": {
+			"base": "[[Category:xxx]]",
+			"fields": [
+				"Page_ID", "Revision_ID", "Name", "Comment", "Id", "Class"
+			]
+		}
+	},
+	"target": {
+		"type": "couchdb",
+		"params": {
+			"username": "",
+			"password": "",
+			"host": ""
+		},
+		"document": {
+			"_id": "@Page_ID",
+			"revid": "@Revision_ID",
+			"mwid": "@Id",
+			"name": "@Name",
+			"class": "@Class",
+			"comment": "@Comment"
+		}
+	}
+
+}
