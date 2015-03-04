@@ -1,12 +1,13 @@
 var nconfig = require('./config.js');
-var process = require('./process.js');
+var mwproc = require('./mw.js');
+var couchproc = require('./couch.js');
 
 var config = nconfig.get("config");
 
-process.getSMWBlastDBcmd( config, function( cb ) {
+mwproc.getSMWBlastDBcmd( config, function( cb ) {
 
-	console.log( typeof cb );
-	console.log( cb );
-	return true;
+	couchproc.insertBatch( config, cb, function( cbe ) {
+		console.log( cbe );
+	});
 	
 });
