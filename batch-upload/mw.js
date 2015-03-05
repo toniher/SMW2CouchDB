@@ -5,37 +5,43 @@ exports.getSMWBlastDBcmd = function( config, cb ) {
 	// Improve config
 	var bot = new mw( config.mw.conn );
 
-	// Generate SMW Query
-	var askquery = generateSMWQuery( config.mw.smwquery );
+	var entries = []; //List of docs
 
 	bot.logIn( function( err ) {
 	
 		if ( !err ) {
+
+			//queryAsk( askquery, offset=0, cb2 ) {
+			//
+			//	cb(cb2);
+			//};
+			// Generate SMW Query
+			var askquery = generateSMWQuery( config.mw.smwquery );
+
 			var params = {
 				action: 'ask',
 				query: askquery
 			};
 	
 			bot.api.call( params, function( err, info, next, data ) {
-				
+
 				if ( !err ) {
-	
+
+					if ( data["query-continue-offset"] ) {
+						// TODO: Limit and offset -> Make reiterative
+					}
 					if ( data && data.query && data.query.results ) {
 					
 						var results = data.query.results;
-						var entries = []; //List of docs
 						
 						for ( var k in results ) {
 							if ( results[k] ) {
 								entries.push( results[k] );
 							}
 						}
-						
 						if ( entries.length > 0 ) {
 							// Push to couchDB
-							
 							cb( mapSMWdocs( entries, config.target.document ) ); 
-
 						} else {
 							cb("Bad");
 						}
@@ -57,6 +63,7 @@ function generateSMWQuery( config ) {
 
 	var base = config.base;
 	var fields = config.fields;
+	var limit = config.limit
 
 	var smwquery = "";
 	smwquery = base;
@@ -66,9 +73,16 @@ function generateSMWQuery( config ) {
 		params = params + "|?" + fields[f];
 	}
 
+	if ( limit ) {
+		params = params + "|limit=" + parseInt( limit, 10 );
+	}
+
 	smwquery = smwquery + params;
 	return smwquery;
 }
+
+//function queryAsk( ) {
+//}
 
 function mapSMWdocs( entries, config ) {
 
@@ -117,10 +131,11 @@ function mapSMWdocs( entries, config ) {
 
 				if ( val !== "" ) {
 					doc[d] = val;
-					docs.push( doc );
 				}
 			}
 		}
+
+		docs.push( doc );
 	}
 
 	return docs;
@@ -144,6 +159,12 @@ function formatEntry( value, type ) {
 		} else {
 			out = parseInt( value, 10 );
 		}
+	} else if ( type === "string" ) {
+		if ( value.isArray ) {
+			out = String( value[0] );
+		} else {
+			out = String( value );
+		}
 	} else {
 		if ( type === "array" ) {
 			out = value;
@@ -153,11 +174,13 @@ function formatEntry( value, type ) {
 			} else {
 				out = value;
 			}
-			if ( out === 'nan' ){
-				out = "";
-			}
 		}
 	}
+
+	if ( out === 'nan' ) {
+		out = "";
+	}
+
 
 	return out;
 }
