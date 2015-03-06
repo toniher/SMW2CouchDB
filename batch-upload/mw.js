@@ -8,49 +8,12 @@ exports.getSMWBlastDBcmd = function( config, cb ) {
 	var entries = []; //List of docs
 
 	bot.logIn( function( err ) {
-	
+
 		if ( !err ) {
 
-			//queryAsk( askquery, offset=0, cb2 ) {
-			//
-			//	cb(cb2);
-			//};
-			// Generate SMW Query
-			var askquery = generateSMWQuery( config.mw.smwquery );
+			var offset = -1; // we assume no offset
+			SMWQuery( bot, config, entries, offset, cb );
 
-			var params = {
-				action: 'ask',
-				query: askquery
-			};
-	
-			bot.api.call( params, function( err, info, next, data ) {
-
-				if ( !err ) {
-
-					if ( data["query-continue-offset"] ) {
-						// TODO: Limit and offset -> Make reiterative
-					}
-					if ( data && data.query && data.query.results ) {
-					
-						var results = data.query.results;
-						
-						for ( var k in results ) {
-							if ( results[k] ) {
-								entries.push( results[k] );
-							}
-						}
-						if ( entries.length > 0 ) {
-							// Push to couchDB
-							cb( mapSMWdocs( entries, config.target.document ) ); 
-						} else {
-							cb("Bad");
-						}
-					}
-				} else {
-					console.log(err);
-					cb("Err 2");
-				}
-			});
 		} else {
 			console.log( err );
 			cb("Err!");
@@ -59,7 +22,7 @@ exports.getSMWBlastDBcmd = function( config, cb ) {
 
 };
 
-function generateSMWQuery( config ) {
+function generateSMWQuery( config, offset, cb ) {
 
 	var base = config.base;
 	var fields = config.fields;
@@ -77,12 +40,69 @@ function generateSMWQuery( config ) {
 		params = params + "|limit=" + parseInt( limit, 10 );
 	}
 
+	if ( offset && offset > 0 ) {
+		params = params + "|offset=" + parseInt( offset, 10 );
+	}
+
 	smwquery = smwquery + params;
-	return smwquery;
+	cb( smwquery );
 }
 
-//function queryAsk( ) {
-//}
+function SMWQuery( bot, config, entries, offset, cb ) {
+
+	generateSMWQuery( config.mw.smwquery, offset, function( askquery ) {
+
+		console.log( "OFFSET: " + offset );
+		console.log( "ASK:" + askquery );
+		var params = {
+			action: 'ask',
+			query: askquery
+		};
+	
+		bot.api.call( params, function( err, info, next, data ) {
+	
+			if ( !err ) {
+	
+				if ( data["query-continue-offset"] ) {
+					offset = data["query-continue-offset"];
+				} else {
+					offset = -1;
+				}
+	
+				if ( data && data.query && data.query.results ) {
+				
+					var results = data.query.results;
+					
+					for ( var k in results ) {
+						if ( results[k] ) {
+							entries.push( results[k] );
+						}
+					}
+					if ( entries.length > 0 ) {
+						// Push to couchDB
+	
+						if ( offset > 0 ) {
+							// Reiterate here
+							SMWQuery( bot, config, entries, offset, cb );
+						} else {
+							cb( mapSMWdocs( entries, config.target.document ) );
+						}
+					} else {
+						cb("No results");
+					}
+				} else {
+
+					cb("No results");
+				}
+			} else {
+				console.log(err);
+				cb("Err 2");
+			}
+		});
+
+	});
+
+}
 
 function mapSMWdocs( entries, config ) {
 

@@ -6,9 +6,8 @@ var config = nconfig.get("config");
 
 mwproc.getSMWBlastDBcmd( config, function( cb ) {
 
-	console.log( cb );
-	// couchproc.insertBatch( config, cb, function( cbe ) {
-	//	console.log( cbe );
-	//});
+	couchproc.insertBatch( config, cb, function( cb2 ) {
+		console.log( cb2 );
+	});
 	
 });
