@@ -52,8 +52,6 @@ function SMWQuery( bot, config, entries, offset, cb ) {
 
 	generateSMWQuery( config.mw.smwquery, offset, function( askquery ) {
 
-		console.log( "OFFSET: " + offset );
-		console.log( "ASK:" + askquery );
 		var params = {
 			action: 'ask',
 			query: askquery
