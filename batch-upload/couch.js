@@ -29,6 +29,53 @@ exports.insertBatch = function( config, docs, cb ) {
 
 };
 
+exports.deleteDocs = function( config, docs, rmdesign, purge, cb ) {
+    
+    var conf = config["target"]["params"];
+    var c = new(cradle.Connection)(conf.host, conf.port, {
+             auth: { username: conf.username, password: conf.password }
+    });
+    
+    var db = c.database( conf.db );
+    
+	db.exists(function (err, exists) {
+		if ( !err && exists ) {
+            
+            if ( docs.length < 1 ) {
+                // Retrieve docs
+                db.all(function(err, res) {
+                    if ( !err ) {
+                        var toDelete = [];
+                        
+                        // TODO: Check here!
+                        if ( res ) {
+    
+                            for(i in res ) {
+                                
+                                var doc = res[i].doc;
+                                
+                                // Handling design
+                                if ( rmdesign  ||  doc.id.indexOf("_design") == -1 ) {
+                                    doc._deleted = true;
+                                    toDelete.push(doc);
+                                }
+                            }
+                        }
+                        
+                        console.log( toDelete );
+                        // TODO: Delete Here
+                    }
+                });
+            }
+
+		} else {
+			console.log( err );
+			cb( "error ");
+		}
+	});
+};
+
+
 exports.updateBatch = function( config, docs, cb ) {
 
 	var conf = config["target"]["params"];

@@ -4,23 +4,50 @@ var couchproc = require('./couch.js');
 
 var config = nconfig.get("config");
 
-// TODO: Command line
 // TODO: Clean DB, purge
 // TODO: Create indexes from config.json
-
-//mwproc.getSMWBlastDBcmd( config, function( cb ) {
-//
-//	couchproc.insertBatch( config, cb, function( cb2 ) {
-//		console.log( cb2 );
-//	});
-//	
-//});
+// TODO: Search command
 
 
-mwproc.getSMWBlastDBcmd( config, function( cb ) {
+var args = process.argv.slice(2);
 
-	couchproc.updateBatch( config, cb, function( cb2 ) {
-		console.log( cb2 );
-	});
+var process = "upload-batch";
+
+if ( args[0] ) {
+	process = args[0];
+}
+
+switch ( process ) {
+
+	case "update-batch":
+		mwproc.getSMWBlastDBcmd( config, function( cb ) {
+		
+			couchproc.updateBatch( config, cb, function( cb2 ) {
+				console.log( cb2 );
+			});
+			
+		});
+		break;
 	
-});
+	case "delete-all":
+		couchproc.deleteDocs( config, null, null, null, function( cb ) {
+			
+			console.log( cb );
+		});
+	
+
+	default:	
+		mwproc.getSMWBlastDBcmd( config, function( cb ) {
+	
+			couchproc.insertBatch( config, cb, function( cb2 ) {
+				console.log( cb2 );
+			});
+			
+		});
+	
+}
+
+
+
+
+
