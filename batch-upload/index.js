@@ -8,16 +8,15 @@ var config = nconfig.get("config");
 // TODO: Create indexes from config.json
 // TODO: Search command
 
-
 var args = process.argv.slice(2);
 
-var process = "upload-batch";
+var method = "upload-batch";
 
 if ( args[0] ) {
-	process = args[0];
+	method = args[0];
 }
 
-switch ( process ) {
+switch ( method ) {
 
 	case "update-batch":
 		mwproc.getSMWBlastDBcmd( config, function( cb ) {
