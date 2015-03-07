@@ -29,6 +29,7 @@ exports.insertBatch = function( config, docs, cb ) {
 
 };
 
+// TODO: Check better way here https://gist.github.com/ryankirkman/873942
 exports.deleteDocs = function( config, docs, rmdesign, purge, cb ) {
     
     var conf = config["target"]["params"];
