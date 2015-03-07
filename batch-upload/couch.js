@@ -41,31 +41,39 @@ exports.deleteDocs = function( config, docs, rmdesign, purge, cb ) {
 	db.exists(function (err, exists) {
 		if ( !err && exists ) {
             
-            if ( docs.length < 1 ) {
+            if ( ! docs || docs.length < 1 ) {
                 // Retrieve docs
                 db.all(function(err, res) {
-                    if ( !err ) {
-                        var toDelete = [];
-                        
+                    if ( !err ) {                        
                         // TODO: Check here!
                         if ( res ) {
-    
-                            for(i in res ) {
-                                
-                                var doc = res[i].doc;
+                            for( i in res ) {
+                                var doc = res[i];
                                 
                                 // Handling design
                                 if ( rmdesign  ||  doc.id.indexOf("_design") == -1 ) {
-                                    doc._deleted = true;
-                                    toDelete.push(doc);
+                                    db.remove(doc.id, doc.value.rev, function(err, rmdoc) {
+                                        console.log(rmdoc);
+                                    }); 
                                 }
                             }
                         }
-                        
-                        console.log( toDelete );
-                        // TODO: Delete Here
                     }
                 });
+            } else {
+                // TODO: Generate list of ids?
+                
+                for( i in docs ) {
+                
+                    var doc = docs[i];
+                  
+                    // Handling design
+                    if ( rmdesign  ||  doc.id.indexOf("_design") == -1 ) {
+                        db.remove(doc.id, doc.value.rev, function(err, rmdoc) {
+                            console.log(rmdoc);
+                        }); 
+                    }
+                }      
             }
 
 		} else {
