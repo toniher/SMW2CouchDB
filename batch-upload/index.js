@@ -5,7 +5,6 @@ var couchproc = require('./couch.js');
 var config = nconfig.get("config");
 
 // TODO: Clean DB, purge
-// TODO: Create indexes from config.json
 // TODO: Search command
 
 var args = process.argv.slice(2);
