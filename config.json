@@ -1,9 +1,9 @@
 {
 	"config": {
 		"mw": {
-			"username": "MycoWiki",
+			"username": "",
 			"password": "",
-			"host": "mycowiki.crg.eu",
+			"host": "",
 			"smwquery": {
 				"base": "[[Category:xxx]]",
 				"fields": [
@@ -14,9 +14,9 @@
 		"target": {
 			"type": "couchdb",
 			"params": {
-				"username": "mycowiki",
+				"username": "",
 				"password": "",
-				"host": "http://couchdb.prgdb.crg.eu"
+				"host": ""
 			},
 			"document": {
 				"_id": "@Page_ID",
@@ -41,11 +41,8 @@
 				},
 				"_design/foo" : {
 					"fulltext": {
-						"by_subject": {
-							"index":"function(doc) { var ret=new Document(); ret.add(doc.subject); return ret }"
-						},
-						"by_content": {
-							"index":"function(doc) { var ret=new Document(); ret.add(doc.content); return ret }"
+						"by_text": {
+							"index":"function(doc) { var ret=new Document(); ret.add(doc.comment); ret.add(doc.name);  return ret }"
 						}
 					}
 				}
@@ -53,3 +50,4 @@
 		}
 	}
 }
+
