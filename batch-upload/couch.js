@@ -48,8 +48,8 @@ exports.addIndexes = function( config, cb ) {
 				// Process view
 
 				var desdoc = indexes[index];
+				
 				// Detect if exists
-				console.log( index );
 				
 				db.get( index, function (err, doc) {
 
