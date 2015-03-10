@@ -199,6 +199,5 @@ function formatEntry( value, type ) {
 		out = "";
 	}
 
-
 	return out;
 }

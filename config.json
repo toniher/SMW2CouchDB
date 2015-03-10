@@ -1,34 +1,37 @@
 {
 	"config": {
 		"mw": {
-			"username": "xxx",
-			"password": "xxxx",
-			"host": "xxxx",
+			"conn": {
+				"username": "xxxx",
+				"password": "xxxx.",
+				"server": "xxxx",
+				"path": "/w"
+			},
 			"smwquery": {
-				"base": "[[Category:xxx]]",
+				"base": "[[Category:xxxx]]",
 				"fields": [
-					"Page_ID", "Revision_ID", "Name", "Comment", "Id", "Class"
+					"Page ID", "Revision ID", "Name", "Comment", "Id", "Class"
 				]
 			}
 		},
 		"target": {
 			"type": "couchdb",
 			"params": {
-				"username": "xxx",
+				"username": "xxxx",
 				"password": "xxxx",
-				"host": "xxx",
+				"host": "xxxx",
 				"port": 80,
-				"db": "xxx"
+				"db": "xxxx"
 			},
 			"document": {
-				"_id": "Page_ID",
-				"revid": "$Revision_ID",
+				"_id": "Page ID",
+				"revid": "$Revision ID",
 				"mwid": "Id",
 				"name": "Name",
 				"class": "Class",
 				"comment": "Comment",
 				"pagename": "#fulltext",
-				"ns": "$#ns"
+				"ns": "$#namespace"
 			},
 			"indexes": {
 				"_design/refs.js": {
