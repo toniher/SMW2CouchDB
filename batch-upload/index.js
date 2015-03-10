@@ -33,9 +33,15 @@ switch ( method ) {
 			
 			console.log( cb );
 		});
-	
+		break;
 
-	default:	
+	case "add-indexes":
+		couchproc.addIndexes( config, function( cb ) {
+			console.log( cb );
+		});
+		break;
+
+	default:
 		mwproc.getSMWBlastDBcmd( config, function( cb ) {
 	
 			couchproc.insertBatch( config, cb, function( cb2 ) {

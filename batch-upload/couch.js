@@ -29,53 +29,87 @@ exports.insertBatch = function( config, docs, cb ) {
 
 };
 
+
+exports.addIndexes = function( config, cb ) {
+
+	var conf = config["target"]["params"];
+	var c = new(cradle.Connection)(conf.host, conf.port, {
+		 auth: { username: conf.username, password: conf.password }
+	});
+
+	var db = c.database( conf.db );
+
+	var indexes = config["target"]["indexes"];
+
+	if ( indexes ) {
+		for ( var index in indexes ) {
+
+			if ( indexes.hasOwnProperty( index ) ) {
+				// Process view
+
+				var desdoc = indexes[index];
+				// Detect if exists
+				db.get('_design/' + index, function (err, doc) {
+					if ( doc && doc["_rev"] ) {
+						desdoc["_rev"] = doc["_rev"];
+					}
+
+					db.save('_design/', {
+						index :  desdoc
+					});
+				});
+			}
+		}
+	}
+
+};
+
 // TODO: Check better way here https://gist.github.com/ryankirkman/873942
 exports.deleteDocs = function( config, docs, rmdesign, purge, cb ) {
-    
-    var conf = config["target"]["params"];
-    var c = new(cradle.Connection)(conf.host, conf.port, {
-             auth: { username: conf.username, password: conf.password }
-    });
-    
-    var db = c.database( conf.db );
-    
+	 
+	 var conf = config["target"]["params"];
+	 var c = new(cradle.Connection)(conf.host, conf.port, {
+			  auth: { username: conf.username, password: conf.password }
+	 });
+	 
+	 var db = c.database( conf.db );
+
 	db.exists(function (err, exists) {
 		if ( !err && exists ) {
-            
-            if ( ! docs || docs.length < 1 ) {
-                // Retrieve docs
-                db.all(function(err, res) {
-                    if ( !err ) {                        
-                        // TODO: Check here!
-                        if ( res ) {
-                            for( i in res ) {
-                                var doc = res[i];
-                                
-                                // Handling design
-                                if ( rmdesign  ||  doc.id.indexOf("_design") == -1 ) {
-                                    db.remove(doc.id, doc.value.rev, function(err, rmdoc) {
-                                        console.log(rmdoc);
-                                    }); 
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                // TODO: Generate list of ids?
-                
-                for( i in docs ) {
-                
-                    var doc = docs[i];
-                  
-                    // Handling design
-                    if ( rmdesign  ||  doc.id.indexOf("_design") == -1 ) {
-                        db.remove(doc.id, doc.value.rev, function(err, rmdoc) {
-                            console.log(rmdoc);
-                        }); 
-                    }
-                }      
-            }
+			
+			if ( ! docs || docs.length < 1 ) {
+				// Retrieve docs
+				db.all(function(err, res) {
+					if ( !err ) {
+						// TODO: Check here!
+						if ( res ) {
+							for( i in res ) {
+								var doc = res[i];
+								
+								// Handling design
+								if ( rmdesign  ||  doc.id.indexOf("_design") == -1 ) {
+									db.remove(doc.id, doc.value.rev, function(err, rmdoc) {
+										  console.log(rmdoc);
+									}); 
+								}
+							}
+						}
+					}
+				});
+			} else {
+				 // TODO: Generate list of ids?
+				 
+				 for( i in docs ) {
+
+					var doc = docs[i];
+					// Handling design
+					if ( rmdesign  ||  doc.id.indexOf("_design") == -1 ) {
+						 db.remove(doc.id, doc.value.rev, function(err, rmdoc) {
+							 console.log(rmdoc);
+						 }); 
+					}
+				}
+			}
 
 		} else {
 			console.log( err );
