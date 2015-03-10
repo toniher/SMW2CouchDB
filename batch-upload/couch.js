@@ -49,14 +49,15 @@ exports.addIndexes = function( config, cb ) {
 
 				var desdoc = indexes[index];
 				// Detect if exists
-				db.get('_design/' + index, function (err, doc) {
-					if ( doc && doc["_rev"] ) {
-						desdoc["_rev"] = doc["_rev"];
-					}
+				console.log( index );
+				
+				db.get( index, function (err, doc) {
 
-					db.save('_design/', {
-						index :  desdoc
-					});
+					if ( doc && doc["_rev"] ) {
+						db.save( index, doc["_rev"], desdoc );
+					} else {
+						db.save( index, desdoc );
+					}
 				});
 			}
 		}
