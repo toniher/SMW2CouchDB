@@ -67,12 +67,13 @@ exports.addIndexes = function( config, cb ) {
 // TODO: Check better way here https://gist.github.com/ryankirkman/873942
 exports.deleteDocs = function( config, docs, rmdesign, purge, cb ) {
 	 
-	 var conf = config["target"]["params"];
-	 var c = new(cradle.Connection)(conf.host, conf.port, {
-			  auth: { username: conf.username, password: conf.password }
-	 });
-	 
-	 var db = c.database( conf.db );
+	var conf = config["target"]["params"];
+	var c = new(cradle.Connection)(conf.host, conf.port, {
+		  auth: { username: conf.username, password: conf.password }
+	});
+
+	var db = c.database( conf.db );
+	console.log( db );
 
 	db.exists(function (err, exists) {
 		if ( !err && exists ) {
@@ -83,9 +84,10 @@ exports.deleteDocs = function( config, docs, rmdesign, purge, cb ) {
 					if ( !err ) {
 						// TODO: Check here!
 						if ( res ) {
+						
 							for( i in res ) {
 								var doc = res[i];
-								
+
 								// Handling design
 								if ( rmdesign  ||  doc.id.indexOf("_design") == -1 ) {
 									db.remove(doc.id, doc.value.rev, function(err, rmdoc) {
@@ -112,6 +114,7 @@ exports.deleteDocs = function( config, docs, rmdesign, purge, cb ) {
 			}
 
 		} else {
+			console.log("Not");
 			console.log( err );
 			cb( "error ");
 		}

@@ -1,9 +1,9 @@
 {
 	"config": {
 		"mw": {
-			"username": "",
-			"password": "",
-			"host": "",
+			"username": "xxx",
+			"password": "xxxx",
+			"host": "xxxx",
 			"smwquery": {
 				"base": "[[Category:xxx]]",
 				"fields": [
@@ -14,17 +14,21 @@
 		"target": {
 			"type": "couchdb",
 			"params": {
-				"username": "",
-				"password": "",
-				"host": ""
+				"username": "xxx",
+				"password": "xxxx",
+				"host": "xxx",
+				"port": 80,
+				"db": "xxx"
 			},
 			"document": {
-				"_id": "@Page_ID",
-				"revid": "@Revision_ID",
-				"mwid": "@Id",
-				"name": "@Name",
-				"class": "@Class",
-				"comment": "@Comment"
+				"_id": "Page_ID",
+				"revid": "$Revision_ID",
+				"mwid": "Id",
+				"name": "Name",
+				"class": "Class",
+				"comment": "Comment",
+				"pagename": "#fulltext",
+				"ns": "$#ns"
 			},
 			"indexes": {
 				"_design/refs.js": {
@@ -50,4 +54,3 @@
 		}
 	}
 }
-
