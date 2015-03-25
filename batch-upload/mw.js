@@ -61,6 +61,7 @@ function SMWQuery( bot, config, entries, offset, cb ) {
 	
 			if ( !err ) {
 	
+				var preoffset = offset;
 				if ( data["query-continue-offset"] ) {
 					offset = data["query-continue-offset"];
 				} else {
@@ -79,7 +80,7 @@ function SMWQuery( bot, config, entries, offset, cb ) {
 					if ( entries.length > 0 ) {
 						// Push to couchDB
 	
-						if ( offset > 0 ) {
+						if ( offset > 0 && ( offset > preoffset ) ) {
 							// Reiterate here
 							SMWQuery( bot, config, entries, offset, cb );
 						} else {
@@ -115,9 +116,13 @@ function mapSMWdocs( entries, config ) {
 			var def = config[d];
 			if ( def.startsWith('$') ) {
 				types[d] = "int";
+			} else if ( def.startsWith('~') ) {
+				types[d] = "link";
 			} else if ( def.startsWith('@') ) {
 				if ( def.startsWith('@$') ) {
 					types[d] = "arrayint";
+				} else if ( def.startsWith('@~') ) {
+					types[d] = "arraylink";
 				} else {
 					types[d] = "array";
 				}
@@ -127,6 +132,7 @@ function mapSMWdocs( entries, config ) {
 
 			def = def.replace("@", "");
 			def = def.replace("$", "");
+			def = def.replace("~", "");
 			config[d] = def; //Replace config
 		}
 
@@ -155,7 +161,7 @@ function mapSMWdocs( entries, config ) {
 
 		docs.push( doc );
 	}
-
+	
 	return docs;
 
 }
@@ -182,6 +188,12 @@ function formatEntry( value, type ) {
 			out = String( value[0] );
 		} else {
 			out = String( value );
+		}
+	} else if ( type === "link" ) {
+		if ( value.isArray || typeof value === 'object' ) {
+			out = String( value[0]["fulltext"] );
+		} else {
+			out = String( value["fulltext"] );
 		}
 	} else {
 		if ( type === "array" ) {
