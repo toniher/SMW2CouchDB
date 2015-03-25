@@ -19,7 +19,7 @@ switch ( method ) {
 
 	case "update-batch":
 		mwproc.getSMWBlastDBcmd( config, function( cb ) {
-		
+
 			couchproc.updateBatch( config, cb, function( cb2 ) {
 				console.log( cb2 );
 			});

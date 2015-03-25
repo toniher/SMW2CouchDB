@@ -42,25 +42,36 @@ exports.addIndexes = function( config, cb ) {
 	var indexes = config["target"]["indexes"];
 
 	if ( indexes ) {
-		for ( var index in indexes ) {
+		async.each( Object.keys( indexes ), function( index, callback ){
 
-			if ( indexes.hasOwnProperty( index ) ) {
-				// Process view
-
+			if ( indexes.hasOwnProperty(index) ) {
+			
 				var desdoc = indexes[index];
 				
 				// Detect if exists
-				
+				console.log( index );
 				db.get( index, function (err, doc) {
 
 					if ( doc && doc["_rev"] ) {
-						db.save( index, doc["_rev"], desdoc );
+						db.save( index, doc["_rev"], desdoc, function( err, res ) {
+							console.log( res );
+							if ( err ) {
+								console.log( err );
+							}
+							callback();
+						});
 					} else {
-						db.save( index, desdoc );
+						db.save( index, desdoc, function( err, res ) {
+							console.log( res );
+							if ( err ) {
+								console.log( err );
+							}
+							callback();
+						});
 					}
 				});
 			}
-		}
+		}, function(err){ });
 	}
 
 };
