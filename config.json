@@ -2,13 +2,13 @@
 	"config": {
 		"mw": {
 			"conn": {
-				"username": "xxxx",
-				"password": "xxxx.",
-				"server": "xxxx",
+				"username": "mycobot",
+				"password": "123BichaMala98.",
+				"server": "mycowiki.crg.eu",
 				"path": "/w"
 			},
 			"smwquery": {
-				"base": "[[Category:xxxx]]",
+				"base": "[[Category:Proteins]]",
 				"fields": [
 					"Page ID", "Revision ID", "Name", "Comment", "Id", "Class"
 				]
@@ -17,11 +17,11 @@
 		"target": {
 			"type": "couchdb",
 			"params": {
-				"username": "xxxx",
-				"password": "xxxx",
-				"host": "xxxx",
+				"username": "mycowiki",
+				"password": "123BichaMala98.",
+				"host": "http://couchdb.prgdb.crg.eu",
 				"port": 80,
-				"db": "xxxx"
+				"db": "mycowiki"
 			},
 			"document": {
 				"_id": "Page ID",
@@ -34,24 +34,24 @@
 				"ns": "$#namespace"
 			},
 			"indexes": {
-				"_design/refs.js": {
+				"_design/refs": {
 					"language": "javascript",
 					"views": {
 	
 					}
 				},
-				"_design/tal.js": {
+				"_design/tal": {
 					"language": "javascript",
 					"views": {
 	
 					}
 				},
-				"_design/foo" : {
+				"_design/search" : {
 					"fulltext": {
 						"by_text": {
 							"index":"function(doc) { var ret=new Document(); ret.add(doc.comment); ret.add(doc.name);  return ret }"
 						}
-					}
+					}, "views": {}
 				}
 			}
 		}
