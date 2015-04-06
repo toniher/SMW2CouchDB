@@ -84,8 +84,8 @@ function SMWQuery( bot, config, importfunc, offset, cb ) {
 							// Reiterate here
 							importfunc( config, mapSMWdocs( entries, config.target.document ), function( cb2 ) {
 								console.log( cb2 );
+								SMWQuery( bot, config, importfunc, offset, cb );
 							} );
-							SMWQuery( bot, config, offset, cb );
 						} else {
 							importfunc( config, mapSMWdocs( entries, config.target.document ), function( cb2 ) {
 								console.log( cb2 );
