@@ -4,12 +4,13 @@ var couchproc = require('./couch.js');
 
 var config = nconfig.get("config");
 
+// TODO: Flexible config file
 // TODO: Clean DB, purge
 // TODO: Search command
 
 var args = process.argv.slice(2);
 
-var method = "upload-batch";
+var method = "import-batch";
 
 if ( args[0] ) {
 	method = args[0];
@@ -18,18 +19,13 @@ if ( args[0] ) {
 switch ( method ) {
 
 	case "update-batch":
-		mwproc.getSMWBlastDBcmd( config, function( cb ) {
-
-			couchproc.updateBatch( config, cb, function( cb2 ) {
-				console.log( cb2 );
-			});
-			
+		mwproc.getSMWBlastDBcmd( config, couchproc.updateBatch, function( cb ) {
+			console.log( cb );
 		});
 		break;
 	
 	case "delete-all":
 		couchproc.deleteDocs( config, null, null, null, function( cb ) {
-			
 			console.log( cb );
 		});
 		break;
@@ -41,12 +37,8 @@ switch ( method ) {
 		break;
 
 	default:
-		mwproc.getSMWBlastDBcmd( config, function( cb ) {
-	
-			couchproc.insertBatch( config, cb, function( cb2 ) {
-				console.log( cb2 );
-			});
-			
+		mwproc.getSMWBlastDBcmd( config, couchproc.insertBatch, function( cb ) {
+			console.log(cb);
 		});
 	
 }

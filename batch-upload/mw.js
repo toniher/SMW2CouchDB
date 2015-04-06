@@ -1,18 +1,16 @@
 var mw = require('nodemw');
 
-exports.getSMWBlastDBcmd = function( config, cb ) {
+exports.getSMWBlastDBcmd = function( config, importfunc, cb ) {
 
 	// Improve config
 	var bot = new mw( config.mw.conn );
-
-	var entries = []; //List of docs
 
 	bot.logIn( function( err ) {
 
 		if ( !err ) {
 
 			var offset = -1; // we assume no offset
-			SMWQuery( bot, config, entries, offset, cb );
+			SMWQuery( bot, config, importfunc, offset, cb );
 
 		} else {
 			console.log( err );
@@ -48,7 +46,9 @@ function generateSMWQuery( config, offset, cb ) {
 	cb( smwquery );
 }
 
-function SMWQuery( bot, config, entries, offset, cb ) {
+function SMWQuery( bot, config, importfunc, offset, cb ) {
+
+	var entries = [];
 
 	generateSMWQuery( config.mw.smwquery, offset, function( askquery ) {
 
@@ -82,9 +82,15 @@ function SMWQuery( bot, config, entries, offset, cb ) {
 	
 						if ( offset > 0 && ( offset > preoffset ) ) {
 							// Reiterate here
-							SMWQuery( bot, config, entries, offset, cb );
+							importfunc( config, mapSMWdocs( entries, config.target.document ), function( cb2 ) {
+								console.log( cb2 );
+							} );
+							SMWQuery( bot, config, offset, cb );
 						} else {
-							cb( mapSMWdocs( entries, config.target.document ) );
+							importfunc( config, mapSMWdocs( entries, config.target.document ), function( cb2 ) {
+								console.log( cb2 );
+								cb( "Everything imported" );
+							} );
 						}
 					} else {
 						cb("No results");
