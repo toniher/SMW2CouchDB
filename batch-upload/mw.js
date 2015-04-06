@@ -109,9 +109,11 @@ function SMWQuery( bot, config, importfunc, offset, cb ) {
 
 }
 
-function mapSMWdocs( entries, config ) {
+function mapSMWdocs( entries, mapconfig ) {
 
 	var docs = [];
+	
+	var config = JSON.parse(JSON.stringify(mapconfig));
 
 	// First assign types for config
 	var types = [];
