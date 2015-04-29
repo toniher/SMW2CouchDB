@@ -1,10 +1,7 @@
-var nconfig = require('./config.js');
+
 var mwproc = require('./mw.js');
 var couchproc = require('./couch.js');
 
-var config = nconfig.get("config");
-
-// TODO: Flexible config file
 // TODO: Clean DB, purge
 // TODO: Search command
 
@@ -16,8 +13,19 @@ if ( args[0] ) {
 	method = args[0];
 }
 
+// Let's allow to pass arguments as well
+var nconfig = require('./config.js')(args[1]);
+var config = nconfig.get("config");
+console.log( config );
+
 switch ( method ) {
 
+	case "import-batch":
+		mwproc.getSMWBlastDBcmd( config, couchproc.insertBatch, function( cb ) {
+			console.log(cb);
+		});
+		break;
+		
 	case "update-batch":
 		mwproc.getSMWBlastDBcmd( config, couchproc.updateBatch, function( cb ) {
 			console.log( cb );
@@ -37,10 +45,7 @@ switch ( method ) {
 		break;
 
 	default:
-		mwproc.getSMWBlastDBcmd( config, couchproc.insertBatch, function( cb ) {
-			console.log(cb);
-		});
-	
+		console.log( "Method non available");
 }
 
 
