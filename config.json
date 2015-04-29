@@ -2,9 +2,9 @@
 	"config": {
 		"mw": {
 			"conn": {
-				"username": "mycobot",
-				"password": "123BichaMala98.",
-				"server": "mycowiki.crg.eu",
+				"username": "mw-username",
+				"password": "mw-passwd",
+				"server": "wiki.example.com",
 				"path": "/w"
 			},
 			"smwquery": {
@@ -17,11 +17,11 @@
 		"target": {
 			"type": "couchdb",
 			"params": {
-				"username": "mycowiki",
-				"password": "123BichaMala98.",
-				"host": "http://couchdb.prgdb.crg.eu",
+				"username": "couch-user",
+				"password": "couch-passwd",
+				"host": "couch.example.com",
 				"port": 80,
-				"db": "mycowiki"
+				"db": "mydb"
 			},
 			"document": {
 				"_id": "Page ID",
