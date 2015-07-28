@@ -8,10 +8,12 @@
 				"path": "/w"
 			},
 			"smwquery": {
-				"base": "[[Category:Proteins]]",
-				"fields": [
-					"Page ID", "Revision ID", "Name", "Comment", "Id", "Class"
-				]
+				"proteins": {
+					"base": "[[Category:Proteins]]",
+					"fields": [
+						"Page ID", "Revision ID", "Name", "Comment", "Id", "Class"
+					]
+				}
 			}
 		},
 		"target": {
@@ -24,14 +26,16 @@
 				"db": "mydb"
 			},
 			"document": {
-				"_id": "Page ID",
-				"revid": "$Revision ID",
-				"mwid": "Id",
-				"name": "Name",
-				"class": "Class",
-				"comment": "Comment",
-				"pagename": "#fulltext",
-				"ns": "$#namespace"
+				"proteins": {
+					"_id": "Page ID",
+					"revid": "$Revision ID",
+					"mwid": "Id",
+					"name": "Name",
+					"class": "Class",
+					"comment": "Comment",
+					"pagename": "#fulltext",
+					"ns": "$#namespace"
+				}
 			},
 			"indexes": {
 				"_design/refs": {
