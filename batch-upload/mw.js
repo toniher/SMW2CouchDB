@@ -33,6 +33,10 @@ exports.getRecentChanges = function( config, cb ) {
 			bot.getRecentChanges( 0 , function( err, data ){
 				console.log( data );
 				// For each entry we try to see if it match a base query. If > 0 -> it is and proceeed
+				// Iterate, if match config param, via SMWCon, then go ahead save by document type
+				// If entries, query according to document type
+				// Save and import
+				
 				cb( "Done!" );
 			});
 			

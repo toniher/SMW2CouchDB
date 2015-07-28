@@ -15,11 +15,7 @@
 					]
 				}
 			},
-			"recent-changes": {
-				"proteins": {
-					"base": "[[Category:Proteins]]"
-				}
-			}
+			"recent-changes": ["proteins"]
 		},
 		"target": {
 			"type": "couchdb",
