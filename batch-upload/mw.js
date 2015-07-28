@@ -149,6 +149,67 @@ function SMWQuery( bot, config, importfunc, offset, cb ) {
 
 }
 
+function SMWQueryMatch( bot, config, importfunc, cb ) {
+
+	var entries = [];
+
+	// Diferent queries and documents
+	var listqueries = config.mw.smwquery;
+	var documents = config.target.document;
+
+	for ( var dockey in listqueries ) {
+
+		if ( listqueries.hasOwnProperty( dockey ) ) {
+
+			generateSMWQuery( listqueries[dockey], offset, function( askquery ) {
+		
+				var params = {
+					action: 'ask',
+					query: askquery
+				};
+			
+				bot.api.call( params, function( err, info, next, data ) {
+			
+					if ( !err ) {
+			
+						if ( data && data.query && data.query.results ) {
+						
+							var results = data.query.results;
+							
+							for ( var k in results ) {
+								if ( results[k] ) {
+									entries.push( results[k] );
+								}
+							}
+							if ( entries.length > 0 ) {
+								// Push to couchDB
+
+								importfunc( config, mapSMWdocs( entries, documents[dockey] ), function( cb2 ) {
+									console.log( cb2 );
+									cb( "Everything imported" );
+								} );
+							} else {
+								cb("No results");
+							}
+						} else {
+		
+							cb("No results");
+						}
+					} else {
+						console.log(err);
+						cb("Err 2");
+					}
+				});
+		
+			});
+
+		}
+
+	}
+
+}
+
+
 function mapSMWdocs( entries, mapconfig ) {
 
 	var docs = [];
