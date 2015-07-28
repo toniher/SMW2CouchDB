@@ -14,7 +14,7 @@
     "async": "^0.9.0",
     "cradle": "^0.6.9",
     "nconf": "0.6.x",
-    "nodemw": "^0.4.0",
+    "nodemw": "^0.7.0",
     "underscore": "^1.8.2"
   },
   "author": "Toni Hermoso",

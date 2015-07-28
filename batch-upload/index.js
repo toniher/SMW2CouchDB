@@ -44,6 +44,13 @@ switch ( method ) {
 		});
 		break;
 
+	// Act on recent changes
+	case "recent-changes":
+		mwproc.getRecentChanges( config, function( cb ) {
+			console.log( cb );
+		});
+		break;
+
 	default:
 		console.log( "Method non available");
 }

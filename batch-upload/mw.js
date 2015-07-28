@@ -20,6 +20,30 @@ exports.getSMWBlastDBcmd = function( config, importfunc, cb ) {
 
 };
 
+// Get RecentChanges
+exports.getRecentChanges = function( config, cb ) {
+	// Improve config
+	var bot = new mw( config.mw.conn );
+
+	bot.logIn( function( err ) {
+
+		if ( !err ) {
+
+			var offset = -1; // we assume no offset
+			bot.getRecentChanges( 0 , function( err, data ){
+				console.log( data );
+				// For each entry we try to see if it match a base query. If > 0 -> it is and proceeed
+				cb( "Done!" );
+			});
+			
+
+		} else {
+			console.log( err );
+			cb("Err!");
+		}
+	});
+};
+
 function generateSMWQuery( config, offset, cb ) {
 
 	var base = config.base;
