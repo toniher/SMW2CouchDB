@@ -1,4 +1,5 @@
 var mw = require('nodemw');
+var async = require('async');
 
 exports.getSMWBlastDBcmd = function( config, importfunc, cb ) {
 
@@ -82,8 +83,11 @@ function SMWQuery( bot, config, importfunc, offset, cb ) {
 	var listqueries = config.mw.smwquery;
 	var documents = config.target.document;
 
-	for ( var dockey in listqueries ) {
+	var dockeys = Object.keys(listqueries);
 
+	async.each(dockeys, function(dockey, callback) {
+
+		console.log( "Query " + dockey );
 		if ( listqueries.hasOwnProperty( dockey ) ) {
 
 			generateSMWQuery( listqueries[dockey], offset, function( askquery ) {
@@ -125,19 +129,22 @@ function SMWQuery( bot, config, importfunc, offset, cb ) {
 								} else {
 									importfunc( config, mapSMWdocs( entries, documents[dockey] ), function( cb2 ) {
 										console.log( cb2 );
-										cb( "Everything imported" );
+										callback();
 									} );
 								}
 							} else {
 								cb("No results");
+								callback();
 							}
 						} else {
 		
 							cb("No results");
+							callback();
 						}
 					} else {
 						console.log(err);
 						cb("Err 2");
+						callback();
 					}
 				});
 		
@@ -145,7 +152,14 @@ function SMWQuery( bot, config, importfunc, offset, cb ) {
 
 		}
 
-	}
+	}, function( err ) {
+		if ( err ) {
+			console.log( err )
+		}
+		cb( "Everything imported" );
+
+	});
+
 
 }
 
@@ -157,8 +171,11 @@ function SMWQueryMatch( bot, config, importfunc, cb ) {
 	var listqueries = config.mw.smwquery;
 	var documents = config.target.document;
 
-	for ( var dockey in listqueries ) {
+	var dockeys = Object.keys(listqueries);
 
+	async.each(dockeys, function(dockey, callback) {
+
+		console.log( "Query " + dockey );
 		if ( listqueries.hasOwnProperty( dockey ) ) {
 
 			generateSMWQuery( listqueries[dockey], offset, function( askquery ) {
@@ -186,18 +203,21 @@ function SMWQueryMatch( bot, config, importfunc, cb ) {
 
 								importfunc( config, mapSMWdocs( entries, documents[dockey] ), function( cb2 ) {
 									console.log( cb2 );
-									cb( "Everything imported" );
+									callback();
 								} );
 							} else {
 								cb("No results");
+								callback();
 							}
 						} else {
 		
 							cb("No results");
+							callback();
 						}
 					} else {
 						console.log(err);
 						cb("Err 2");
+						callback();
 					}
 				});
 		
@@ -205,7 +225,12 @@ function SMWQueryMatch( bot, config, importfunc, cb ) {
 
 		}
 
-	}
+	}, function( err ) {
+		if ( err ) {
+			console.log( err );
+		}
+		cb( "Everything imported" );
+	});
 
 }
 
