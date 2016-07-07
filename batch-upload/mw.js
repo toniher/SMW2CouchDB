@@ -87,7 +87,7 @@ function SMWQuery( bot, config, importfunc, offset, cb ) {
 
 	async.each(dockeys, function(dockey, callback) {
 
-		console.log( "Query " + dockey );
+		// console.log( "Query " + dockey );
 		if ( listqueries.hasOwnProperty( dockey ) ) {
 
 			generateSMWQuery( listqueries[dockey], offset, function( askquery ) {
@@ -123,12 +123,12 @@ function SMWQuery( bot, config, importfunc, offset, cb ) {
 								if ( offset > 0 && ( offset > preoffset ) ) {
 									// Reiterate here
 									importfunc( config, mapSMWdocs( entries, documents[dockey] ), function( cb2 ) {
-										console.log( cb2 );
+										// console.log( cb2 );
 										SMWQuery( bot, config, importfunc, offset, cb );
 									} );
 								} else {
 									importfunc( config, mapSMWdocs( entries, documents[dockey] ), function( cb2 ) {
-										console.log( cb2 );
+										// console.log( cb2 );
 										callback();
 									} );
 								}
@@ -175,7 +175,7 @@ function SMWQueryMatch( bot, config, importfunc, cb ) {
 
 	async.each(dockeys, function(dockey, callback) {
 
-		console.log( "Query " + dockey );
+		// console.log( "Query " + dockey );
 		if ( listqueries.hasOwnProperty( dockey ) ) {
 
 			generateSMWQuery( listqueries[dockey], offset, function( askquery ) {

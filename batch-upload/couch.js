@@ -23,7 +23,7 @@ exports.insertBatch = function( config, docs, cb ) {
 		if ( !err && exists ) {
 			db.save( docs, function (err, res) {
 				if ( ! err ) {
-					console.log( res );
+					// console.log( res );
 					cb("imported");
 				} else {
 					console.log( err );
@@ -62,7 +62,7 @@ exports.addIndexes = function( config, cb ) {
 
 					if ( doc && doc["_rev"] ) {
 						db.save( index, doc["_rev"], desdoc, function( err, res ) {
-							console.log( res );
+							// console.log( res );
 							if ( err ) {
 								console.log( err );
 							}
@@ -70,7 +70,7 @@ exports.addIndexes = function( config, cb ) {
 						});
 					} else {
 						db.save( index, desdoc, function( err, res ) {
-							console.log( res );
+							// console.log( res );
 							if ( err ) {
 								console.log( err );
 							}
@@ -111,7 +111,7 @@ exports.deleteDocs = function( config, docs, rmdesign, purge, cb ) {
 								// Handling design
 								if ( rmdesign  ||  doc.id.indexOf("_design") == -1 ) {
 									db.remove(doc.id, doc.value.rev, function(err, rmdoc) {
-										  console.log(rmdoc);
+										  // console.log(rmdoc);
 									}); 
 								}
 							}
@@ -127,7 +127,7 @@ exports.deleteDocs = function( config, docs, rmdesign, purge, cb ) {
 					// Handling design
 					if ( rmdesign  ||  doc.id.indexOf("_design") == -1 ) {
 						 db.remove(doc.id, doc.value.rev, function(err, rmdoc) {
-							 console.log(rmdoc);
+							 // console.log(rmdoc);
 						 }); 
 					}
 				}

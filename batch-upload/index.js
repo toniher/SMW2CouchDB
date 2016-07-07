@@ -16,7 +16,7 @@ if ( args[0] ) {
 // Let's allow to pass arguments as well
 var nconfig = require('./config.js')(args[1]);
 var config = nconfig.get("config");
-console.log( config );
+// console.log( config );
 
 switch ( method ) {
 
