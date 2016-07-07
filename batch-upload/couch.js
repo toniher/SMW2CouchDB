@@ -2,6 +2,14 @@ var cradle = require('cradle');
 var async = require('async');
 var underscore = require('underscore');
 
+// Simoly printing docs
+exports.printBatch = function( config, docs, cb ) {
+
+	cb( docs );
+
+};
+
+
 exports.insertBatch = function( config, docs, cb ) {
 
 	var conf = config["target"]["params"];

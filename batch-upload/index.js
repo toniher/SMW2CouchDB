@@ -33,7 +33,7 @@ switch ( method ) {
 		break;
 
 	case "print-batch":
-		mwproc.getSMWBlastDBcmd( config, printBatch, function( cb ) {
+		mwproc.getSMWBlastDBcmd( config, couchproc.printBatch, function( cb ) {
 			console.log(cb);
 		});
 		break;
@@ -60,13 +60,5 @@ switch ( method ) {
 	default:
 		console.log( "Method non available");
 }
-
-// Simoly printing docs
-printBatch = function( config, docs, cb ) {
-
-	cb( docs );
-
-};
-
 
 
