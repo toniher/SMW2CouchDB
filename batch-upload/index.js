@@ -7,7 +7,7 @@ var couchproc = require('./couch.js');
 
 var args = process.argv.slice(2);
 
-var method = "import-batch";
+var method = "print-batch";
 
 if ( args[0] ) {
 	method = args[0];
@@ -31,7 +31,13 @@ switch ( method ) {
 			console.log( cb );
 		});
 		break;
-	
+
+	case "print-batch":
+		mwproc.getSMWBlastDBcmd( config, printBatch, function( cb ) {
+			console.log(cb);
+		});
+		break;
+		
 	case "delete-all":
 		couchproc.deleteDocs( config, null, null, null, function( cb ) {
 			console.log( cb );
@@ -55,7 +61,12 @@ switch ( method ) {
 		console.log( "Method non available");
 }
 
+// Simoly printing docs
+printBatch = function( config, docs, cb ) {
 
+	cb( docs );
+
+};
 
 
 
