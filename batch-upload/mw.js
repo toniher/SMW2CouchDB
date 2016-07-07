@@ -122,13 +122,12 @@ function SMWQuery( bot, config, importfunc, offset, cb ) {
 			
 								if ( offset > 0 && ( offset > preoffset ) ) {
 									// Reiterate here
+									// console.log( offset );
 									importfunc( config, mapSMWdocs( entries, documents[dockey] ), function( cb2 ) {
-										// console.log( cb2 );
 										SMWQuery( bot, config, importfunc, offset, cb );
 									} );
 								} else {
 									importfunc( config, mapSMWdocs( entries, documents[dockey] ), function( cb2 ) {
-										// console.log( cb2 );
 										callback();
 									} );
 								}

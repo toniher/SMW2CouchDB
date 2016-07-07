@@ -5,7 +5,8 @@ var underscore = require('underscore');
 // Simoly printing docs
 exports.printBatch = function( config, docs, cb ) {
 
-	cb( docs );
+	console.log( docs );
+	cb();
 
 };
 
