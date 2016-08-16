@@ -80,6 +80,9 @@ function SMWQuery( bot, config, importfunc, offset, cb ) {
 	var entries = [];
 
 	// Diferent queries and documents
+
+	// TODO: More flexible queries. Document match instead
+
 	var listqueries = config.mw.smwquery;
 	var documents = config.target.document;
 

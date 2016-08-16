@@ -7,14 +7,15 @@
 				"server": "wiki.example.com",
 				"path": "/w"
 			},
-			"smwquery": {
-				"proteins": {
+			"smwquery": [
+				{
 					"base": "[[Category:Proteins]]",
 					"fields": [
 						"Page ID", "Revision ID", "Name", "Comment", "Id", "Class"
-					]
+					],
+					"document": "proteins"
 				}
-			},
+			],
 			"recent-changes": ["proteins"]
 		},
 		"target": {
@@ -35,7 +36,8 @@
 					"class": "Class",
 					"comment": "Comment",
 					"pagename": "#fulltext",
-					"ns": "$#namespace"
+					"ns": "$#namespace",
+					"extra": "*ConstantValue"
 				}
 			},
 			"indexes": {
