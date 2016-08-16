@@ -310,38 +310,42 @@ function formatEntry( value, type ) {
 
 	var out = "";
 
-	if ( type === "int" ) {
-		if ( value.isArray ) {
-			out = parseInt( value[0], 10 );
-		} else {
-			out = parseInt( value, 10 );
-		}
-	} else if ( type === "string" ) {
-		if ( value.isArray ) {
-			out = String( value[0] );
-		} else {
-			out = String( value );
-		}
-	} else if ( type === "link" ) {
-		if ( value.isArray || typeof value === 'object' ) {
-			out = String( value[0]["fulltext"] );
-		} else {
-			out = String( value["fulltext"] );
-		}
-	} else {
-		if ( type === "array" ) {
-			out = value;
-		} else {
-			if ( typeof value !== 'string' ) {
-				out = value[0];
+	if ( value ) {
+
+		if ( type === "int" ) {
+			if ( value.isArray ) {
+				out = parseInt( value[0], 10 );
 			} else {
+				out = parseInt( value, 10 );
+			}
+		} else if ( type === "string" ) {
+			if ( value.isArray ) {
+				out = String( value[0] );
+			} else {
+				out = String( value );
+			}
+		} else if ( type === "link" ) {
+			if ( value.isArray || typeof value === 'object' ) {
+				out = String( value[0]["fulltext"] );
+			} else {
+				out = String( value["fulltext"] );
+			}
+		} else {
+			if ( type === "array" ) {
 				out = value;
+			} else {
+				if ( typeof value !== 'string' ) {
+					out = value[0];
+				} else {
+					out = value;
+				}
 			}
 		}
-	}
+	
+		if ( out === 'nan' ) {
+			out = "";
+		}
 
-	if ( out === 'nan' ) {
-		out = "";
 	}
 
 	return out;
