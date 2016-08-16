@@ -279,11 +279,14 @@ function mapSMWdocs( entries, mapconfig ) {
 			if ( config[d] ) {
 				var def = config[d];
 				var val = "";
-				if ( def.startsWith('#') ) {
+				if ( def.startsWith('#') ) { 
 					def = def.replace("#", "");
-					val = formatEntry( entries[e][def], types[d] );
+					val = formatEntry( entries[e][def], types[d] ); //Internal property
+				} else if ( def.startsWith('*') ) {
+					def = def.replace("*", "");
+					val = def; // Constant
 				} else {
-					val = formatEntry( entries[e]["printouts"][def], types[d] );
+					val = formatEntry( entries[e]["printouts"][def], types[d] ); //Actual SMW property
 				}
 
 				if ( val !== "" ) {
