@@ -11,7 +11,7 @@ exports.getSMWBlastDBcmd = function( config, importfunc, cb ) {
 		if ( !err ) {
 
 			var offset = -1; // we assume no offset
-			SMWQuery( bot, config, importfunc, offset, cb );
+			SMWQueryAll( bot, config, importfunc, offset, cb );
 
 		} else {
 			console.log( err );
@@ -75,84 +75,36 @@ function generateSMWQuery( config, offset, cb ) {
 	cb( smwquery );
 }
 
-function SMWQuery( bot, config, importfunc, offset, cb ) {
-
-	var entries = [];
+function SMWQueryAll( bot, config, importfunc, offset, cb ) {
 
 	// Diferent queries and documents
-
-	// TODO: More flexible queries. Document match instead
 
 	var listqueries = config.mw.smwquery;
 	var documents = config.target.document;
 
-	var dockeys = Object.keys(listqueries);
+	var dockeys = Object.keys(documents);
 
-	async.each(dockeys, function(dockey, callback) {
+	async.each(dockeys, function( dockey, acb ) {
 
-		// console.log( "Query " + dockey );
-		if ( listqueries.hasOwnProperty( dockey ) ) {
+		console.log( "* Query " + dockey );
 
-			generateSMWQuery( listqueries[dockey], offset, function( askquery ) {
-		
-				var params = {
-					action: 'ask',
-					query: askquery
-				};
-			
-				bot.api.call( params, function( err, info, next, data ) {
-			
-					if ( !err ) {
-			
-						var preoffset = offset;
-						if ( data["query-continue-offset"] ) {
-							offset = data["query-continue-offset"];
-						} else {
-							offset = -1;
-						}
-			
-						if ( data && data.query && data.query.results ) {
-						
-							var results = data.query.results;
-							
-							for ( var k in results ) {
-								if ( results[k] ) {
-									entries.push( results[k] );
-								}
-							}
-							if ( entries.length > 0 ) {
-								// Push to couchDB
-			
-								if ( offset > 0 && ( offset > preoffset ) ) {
-									// Reiterate here
-									// console.log( offset );
-									importfunc( config, mapSMWdocs( entries, documents[dockey] ), function( cb2 ) {
-										SMWQuery( bot, config, importfunc, offset, cb );
-									} );
-								} else {
-									importfunc( config, mapSMWdocs( entries, documents[dockey] ), function( cb2 ) {
-										callback();
-									} );
-								}
-							} else {
-								cb("No results");
-								callback();
-							}
-						} else {
-		
-							cb("No results");
-							callback();
-						}
-					} else {
-						console.log(err);
-						cb("Err 2");
-						callback();
-					}
-				});
-		
-			});
+		async.each( listqueries, function( query, qcb ) {
 
-		}
+			if ( query.hasOwnProperty("document") && query.document === dockey ) {
+
+				SMWQuery( query, documents[dockey], bot, config, importfunc, offset, qcb, cb );
+
+			} else {
+				qcb();
+			}
+
+		}, function( err ) {
+			if ( err ) {
+				console.log( "Problem with "+dockey );
+			}
+			acb();
+			console.log( "Imported "+dockey );
+		});
 
 	}, function( err ) {
 		if ( err ) {
@@ -161,77 +113,71 @@ function SMWQuery( bot, config, importfunc, offset, cb ) {
 		cb( "Everything imported" );
 
 	});
-
-
 }
 
-function SMWQueryMatch( bot, config, importfunc, cb ) {
+function SMWQuery( query, document, bot, config, importfunc, offset, cbiter, cb ) {
 
 	var entries = [];
 
-	// Diferent queries and documents
-	var listqueries = config.mw.smwquery;
-	var documents = config.target.document;
+	console.log( query );
+	generateSMWQuery( query, offset, function( askquery ) {
 
-	var dockeys = Object.keys(listqueries);
-
-	async.each(dockeys, function(dockey, callback) {
-
-		// console.log( "Query " + dockey );
-		if ( listqueries.hasOwnProperty( dockey ) ) {
-
-			generateSMWQuery( listqueries[dockey], offset, function( askquery ) {
-		
-				var params = {
-					action: 'ask',
-					query: askquery
-				};
-			
-				bot.api.call( params, function( err, info, next, data ) {
-			
-					if ( !err ) {
-			
-						if ( data && data.query && data.query.results ) {
-						
-							var results = data.query.results;
-							
-							for ( var k in results ) {
-								if ( results[k] ) {
-									entries.push( results[k] );
-								}
-							}
-							if ( entries.length > 0 ) {
-								// Push to couchDB
-
-								importfunc( config, mapSMWdocs( entries, documents[dockey] ), function( cb2 ) {
-									console.log( cb2 );
-									callback();
-								} );
-							} else {
-								cb("No results");
-								callback();
-							}
+		var params = {
+			action: 'ask',
+			query: askquery
+		};
+	
+		bot.api.call( params, function( err, info, next, data ) {
+	
+			if ( !err ) {
+	
+				var preoffset = offset;
+				if ( data["query-continue-offset"] ) {
+					offset = data["query-continue-offset"];
+				} else {
+					offset = -1;
+				}
+	
+				if ( data && data.query && data.query.results ) {
+				
+					var results = data.query.results;
+					
+					for ( var k in results ) {
+						if ( results[k] ) {
+							entries.push( results[k] );
+						}
+					}
+					console.log( "ENTRIES:" + entries.length );
+					if ( entries.length > 0 ) {
+						// Push to couchDB
+	
+						if ( offset > 0 && ( offset > preoffset ) ) {
+							// Reiterate here
+							// console.log( offset );
+							importfunc( config, mapSMWdocs( entries, document ), function( cb2 ) {
+								SMWQuery( query, document, bot, config, importfunc, offset, cbiter, cb );
+							} );
 						} else {
-		
-							cb("No results");
-							callback();
+							importfunc( config, mapSMWdocs( entries, document ), function( cb2 ) {
+								cbiter();
+							} );
 						}
 					} else {
-						console.log(err);
-						cb("Err 2");
-						callback();
+						cbiter();
+						cb("No results");
 					}
-				});
-		
-			});
+				} else {
+					cbiter();
+					cb("No results");
+				}
+			} else {
+				console.log(err);
+				cbiter();
+				cb("Err 2");
 
-		}
+			}
+		});
 
-	}, function( err ) {
-		if ( err ) {
-			console.log( err );
-		}
-		cb( "Everything imported" );
 	});
 
 }
