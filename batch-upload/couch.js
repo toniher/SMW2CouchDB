@@ -10,6 +10,51 @@ exports.printBatch = function( config, docs, cb ) {
 
 };
 
+// Simoly printing docs
+exports.printCSV = function( config, docs, cb ) {
+
+	var rows = [];
+
+	let itera = 0;
+
+	async.eachSeries( docs, function( doc, callback ){
+
+		if ( itera === 0 ) {
+			
+			let row = [];
+			
+			for (let property in doc) {
+				if (doc.hasOwnProperty(property)) {
+					row.push( property );
+				}
+			}
+			
+			//rows.push( row );
+			
+		}
+		
+		let row = [];
+		
+		for (let property in doc) {
+			if (doc.hasOwnProperty(property)) {
+				row.push( doc[property] );
+			}
+		}
+		
+		rows.push( row.join("\t") );
+
+		itera++;
+		callback();
+	
+	}, function(err){
+		if( ! err ) {
+			console.log( rows.join("\n") );
+			cb();
+		}
+	});
+
+};
+
 
 exports.insertBatch = function( config, docs, cb ) {
 

@@ -37,6 +37,12 @@ switch ( method ) {
 			console.log(cb);
 		});
 		break;
+
+        case "print-csv":
+                mwproc.getSMWBlastDBcmd( config, couchproc.printCSV, function( cb ) {
+                        console.log(cb);
+                });
+                break;
 		
 	case "delete-all":
 		couchproc.deleteDocs( config, null, null, null, function( cb ) {
