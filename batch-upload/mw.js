@@ -9,7 +9,6 @@ exports.getSMWBlastDBcmd = function( config, importfunc, cb ) {
 	bot.logIn( function( err ) {
 
 		if ( !err ) {
-
 			var offset = -1; // we assume no offset
 			SMWQueryAll( bot, config, importfunc, offset, cb );
 
@@ -86,12 +85,11 @@ function SMWQueryAll( bot, config, importfunc, offset, cb ) {
 
 	async.each(dockeys, function( dockey, acb ) {
 
-		console.log( "* Query " + dockey );
+		//console.log( "* Query " + dockey );
 
 		async.each( listqueries, function( query, qcb ) {
 
 			if ( query.hasOwnProperty("document") && query.document === dockey ) {
-
 				SMWQuery( query, documents[dockey], bot, config, importfunc, offset, qcb, cb );
 
 			} else {
@@ -103,14 +101,14 @@ function SMWQueryAll( bot, config, importfunc, offset, cb ) {
 				console.log( "Problem with "+dockey );
 			}
 			acb();
-			console.log( "Imported "+dockey );
+			// console.log( "Imported "+dockey );
 		});
 
 	}, function( err ) {
 		if ( err ) {
 			console.log( err )
 		}
-		cb( "Everything imported" );
+		cb( );
 
 	});
 }
@@ -119,7 +117,7 @@ function SMWQuery( query, document, bot, config, importfunc, offset, cbiter, cb 
 
 	var entries = [];
 
-	console.log( query );
+	// console.log( query );
 	generateSMWQuery( query, offset, function( askquery ) {
 
 		var params = {
@@ -147,7 +145,7 @@ function SMWQuery( query, document, bot, config, importfunc, offset, cbiter, cb 
 							entries.push( results[k] );
 						}
 					}
-					console.log( "ENTRIES:" + entries.length );
+					// console.log( "ENTRIES:" + entries.length );
 					if ( entries.length > 0 ) {
 						// Push to couchDB
 	

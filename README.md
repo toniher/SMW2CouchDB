@@ -10,6 +10,9 @@ Via a Semantic MediaWiki Query we transfer documents to a CouchDB instance.
 All the magic is matching SMW Properties into CouchDB keys
 
 
+## TODO
+
+* Proper logging
 
 
 
